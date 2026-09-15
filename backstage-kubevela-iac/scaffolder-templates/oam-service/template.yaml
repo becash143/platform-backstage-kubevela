@@ -1,0 +1,69 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: oam-kubevela-service
+  title: New Service (KubeVela delivery)
+  description: >
+    Scaffolds a service with a KubeVela OAM Application manifest,
+    correctly annotated so it syncs into the Backstage catalog.
+  tags:
+    - kubevela
+    - kubernetes
+    - golden-path
+spec:
+  owner: platform-team
+  type: service
+
+  parameters:
+    - title: Service details
+      required: [name, owner, image]
+      properties:
+        name:
+          title: Service name
+          type: string
+          description: Lowercase, dash-separated (e.g. payments-api)
+        owner:
+          title: Owning team
+          type: string
+        image:
+          title: Container image
+          type: string
+        port:
+          title: Container port
+          type: integer
+          default: 8080
+
+  steps:
+    - id: fetch-skeleton
+      name: Generate files
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          image: ${{ parameters.image }}
+          port: ${{ parameters.port }}
+
+    - id: publish
+      name: Publish to source control
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: ${{ parameters.name }} - KubeVela delivered service
+        repoUrl: github.com?repo=${{ parameters.name }}&owner=${{ parameters.owner }}
+
+    - id: register
+      name: Register in catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

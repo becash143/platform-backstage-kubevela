@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}
+  annotations:
+    # These are the "Well-Known Annotations" the KubeVela bridge plugin
+    # reads to keep this entity in sync with the live Application in
+    # the cluster. Without them the component shows up but stays stale.
+    backstage.io/kubernetes-id: ${{ values.name }}
+    kubevela.io/application: ${{ values.name }}
+    kubevela.io/namespace: default
+spec:
+  type: service
+  lifecycle: production
+  owner: ${{ values.owner }}

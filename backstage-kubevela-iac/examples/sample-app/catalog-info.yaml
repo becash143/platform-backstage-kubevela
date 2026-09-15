@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hello-service
+  annotations:
+    backstage.io/kubernetes-id: hello-service
+    kubevela.io/application: hello-service
+    kubevela.io/namespace: default
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team

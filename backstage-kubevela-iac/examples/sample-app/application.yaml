@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: hello-service
+  namespace: default
+  annotations:
+    backstage.io/owner: platform-team
+spec:
+  components:
+    - name: hello-service
+      type: webservice
+      properties:
+        image: nginxdemos/hello:latest
+        port: 8080
+      traits:
+        - type: scaler
+          properties:
+            replicas: 1

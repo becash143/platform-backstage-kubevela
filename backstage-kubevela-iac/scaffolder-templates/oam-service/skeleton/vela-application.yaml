@@ -1,0 +1,25 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ${{ values.name }}
+  namespace: default
+  annotations:
+    # Mirrors back to Backstage: this is how the entity provider
+    # attributes ownership/links on the Backstage side.
+    backstage.io/owner: ${{ values.owner }}
+spec:
+  components:
+    - name: ${{ values.name }}
+      type: webservice
+      properties:
+        image: ${{ values.image }}
+        port: ${{ values.port }}
+      traits:
+        - type: scaler
+          properties:
+            replicas: 2
+        - type: gateway
+          properties:
+            domain: ${{ values.name }}.internal.example.com
+            http:
+              "/": ${{ values.port }}
