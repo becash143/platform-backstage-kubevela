@@ -40,7 +40,7 @@ backstage:
     # (`new VelaProvider('production', env.reader, env.config)` from
     # @oamdev/plugin-kubevela-backend). For that pattern the plugin reads
     # these keys at the ROOT of app-config, NOT nested under
-    # catalog.providers.vela.<id> — that nesting is only used by the
+    # catalog.providers.vela.<id>; that nesting is only used by the
     # newer velaProviderModule (backend.add()) integration, which this
     # repo does not use. Keep this as a flat `vela:` block.
     vela:

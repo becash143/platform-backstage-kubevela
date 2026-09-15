@@ -2,13 +2,13 @@
 
 Cloud-agnostic Terraform that installs and wires together:
 
-- **KubeVela** (`vela-core`) — OAM-based delivery engine, the backend
-- **backstage-plugin-kubevela** — the community bridge that mirrors
+- **KubeVela** (`vela-core`): OAM-based delivery engine, the backend
+- **backstage-plugin-kubevela**: the community bridge that mirrors
   Vela Applications into the Backstage catalog
-- **Backstage** — the developer-facing frontend/catalog
+- **Backstage**: the developer-facing frontend/catalog
 
 Targets any existing Kubernetes cluster via kubeconfig (EKS, GKE, AKS,
-kind, k3s, etc.) — no cloud-specific provisioning included, bring your
+kind, k3s, etc.), no cloud-specific provisioning included; bring your
 own cluster.
 
 ## Layout
@@ -27,7 +27,7 @@ examples/sample-app/         A working reference: catalog-info.yaml + Applicatio
 
 1. **A built Backstage app image** with `@oamdev/plugin-kubevela-backend`
    installed and wired in (`backstage/catalog-plugin-wiring.ts` shows the
-   exact code — this can't be expressed as Helm values, it has to be
+   exact code; this can't be expressed as Helm values, it has to be
    compiled into the app). Push it and set `var.backstage_image`.
 2. **A built plugin backend image** from
    [`kubevela-contrib/backstage-plugin-kubevela`](https://github.com/kubevela-contrib/backstage-plugin-kubevela).
@@ -61,7 +61,7 @@ kubectl apply -f examples/sample-app/application.yaml
 kubectl port-forward -n backstage svc/backstage 7007:7007
 ```
 
-Open Backstage and check the catalog for `hello-service` — it should
+Open Backstage and check the catalog for `hello-service`; it should
 appear as a Component within one refresh interval (default 30s here),
 sourced from the live Application, not from the static
 `catalog-info.yaml` alone.
@@ -82,10 +82,10 @@ why the entity shows up once and never updates.
 `backstage/catalog-plugin-wiring.ts` uses the "older backend" integration
 pattern for `@oamdev/plugin-kubevela-backend` (`new VelaProvider(...)`
 wired manually into `catalog.ts`). That pattern reads its config from a
-flat `vela:` block at the root of app-config — NOT from
+flat `vela:` block at the root of app-config, NOT from
 `catalog.providers.vela.<id>`, which is a different, newer integration
 path (`velaProviderModule` via `backend.add()`) this repo doesn't use.
-`helm-values.yaml.tpl` and the wiring code are kept in sync on this —
+`helm-values.yaml.tpl` and the wiring code are kept in sync on this:
 if you switch to the newer backend module, both need to change together
 (and the newer path expects `schedule: { initialDelay, frequency,
 timeout }` as nested Duration objects, not flat `.seconds` values).
@@ -100,12 +100,12 @@ values shapes do change across releases.
 ## Known gaps this doesn't solve
 
 - **RBAC is still two systems.** Backstage permissions and
-  Kubernetes/KubeVela RBAC are configured independently here — there's
+  Kubernetes/KubeVela RBAC are configured independently here; there's
   no single source of truth for "who can do what."
 - **Polling, not push.** Status is only as fresh as the refresh
   interval; there's no webhook/event-driven sync in the community
   plugin as of this writing.
-- **Multi-cluster** isn't handled — this wiring assumes one cluster.
+- **Multi-cluster** isn't handled; this wiring assumes one cluster.
   KubeVela supports multi-cluster delivery; extending the provider to
   multiple `host` entries under `catalog.providers.vela` is the natural
   next step.

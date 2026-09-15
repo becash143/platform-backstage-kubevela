@@ -94,7 +94,7 @@ resource "kubernetes_deployment" "kubevela_plugin" {
           }
 
           # Refresh cadence is controlled from the Backstage side
-          # (vela.frequency in helm-values.yaml.tpl) — the connector
+          # (vela.frequency in helm-values.yaml.tpl); the connector
           # itself doesn't read a refresh-frequency env var, so no
           # env block is needed here.
 

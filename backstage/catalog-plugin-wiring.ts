@@ -25,7 +25,7 @@ export default async function createPlugin(
 
   // NOTE: VelaProvider (older-backend pattern) reads its config from a
   // flat `vela:` block at the root of app-config.yaml, not from
-  // catalog.providers.vela.<id> — that nesting belongs to the newer
+  // catalog.providers.vela.<id>; that nesting belongs to the newer
   // velaProviderModule integration and is not what's wired up here.
   // Keep these keys in sync with backstage/helm-values.yaml.tpl.
   const frequency = env.config.getOptionalNumber('vela.frequency') ?? 30;

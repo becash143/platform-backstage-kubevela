@@ -38,7 +38,7 @@ variable "kubevela_plugin_image" {
   description = <<-EOT
     Container image for the backstage-plugin-kubevela backend
     (build from https://github.com/kubevela-contrib/backstage-plugin-kubevela
-    and push to your own registry — see README).
+    and push to your own registry, see README).
   EOT
   type        = string
   default     = "ghcr.io/your-org/backstage-kubevela-plugin:latest"
