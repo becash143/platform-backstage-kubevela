@@ -1,7 +1,9 @@
 # ---- KubeVela core (the delivery/OAM controller) ----
+# NOTE: charts.kubevela.net/core is retired (the domain no longer
+# resolves). The chart moved to GitHub Pages some time ago.
 resource "helm_release" "kubevela" {
   name             = "kubevela"
-  repository       = "https://charts.kubevela.net/core"
+  repository       = "https://kubevela.github.io/charts"
   chart            = "vela-core"
   version          = var.kubevela_chart_version
   namespace        = kubernetes_namespace.vela_system.metadata[0].name
@@ -10,6 +12,18 @@ resource "helm_release" "kubevela" {
   set {
     name  = "applicationRevisionLimit"
     value = "5"
+  }
+
+  # The ClusterGateway (multicluster) component needs a working
+  # Kubernetes API aggregation layer. Most real multi-node clusters
+  # (EKS/GKE/AKS) have this and can leave it enabled. Some local/dev
+  # single-node setups (notably Docker Desktop's Kubernetes) can't
+  # satisfy the aggregation layer cleanly and need this set to false.
+  # Multicluster isn't required for the Backstage<->KubeVela bridge
+  # itself, only for KubeVela's own cross-cluster delivery features.
+  set {
+    name  = "multicluster.enabled"
+    value = var.kubevela_multicluster_enabled
   }
 }
 
